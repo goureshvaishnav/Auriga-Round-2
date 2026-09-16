@@ -79,7 +79,7 @@ const drawTable = (document, headers, rows, startY, columnWidths) => {
   return y + 4;
 };
 
-export const downloadReceipt = ({ pool, memberRows, settlements, fairShare, totalCollected, remaining, targetReached }) => {
+export const downloadReceipt = ({ pool, memberRows, settlements, fairShare, totalCollected, remaining, targetReached, importReport }) => {
   const document = new jsPDF({ unit: 'mm', format: 'a4' });
   const generatedAt = new Intl.DateTimeFormat('en-IN', {
     dateStyle: 'medium',
@@ -153,6 +153,22 @@ export const downloadReceipt = ({ pool, memberRows, settlements, fairShare, tota
     document.setFontSize(9);
     document.text('Everyone is settled. No payments required.', MARGIN, y);
     y += 12;
+  }
+
+  if (importReport) {
+    y += 7;
+    y = drawSectionTitle(document, 'Imported contributions', y);
+    y = ensureSpace(document, y, 14);
+    document.setTextColor(71, 85, 105);
+    document.setFont('helvetica', 'normal');
+    document.setFontSize(8.5);
+    document.text(
+      `Rows processed: ${importReport.totalRows}   Imported: ${importReport.importedCount}   De-duplicated: ${importReport.duplicateCount}   Merged: ${importReport.mergedCount}   Rejected: ${importReport.rejectedCount}`,
+      MARGIN,
+      y,
+      { maxWidth: PAGE_WIDTH - MARGIN * 2 },
+    );
+    y += 10;
   }
 
   y = ensureSpace(document, y + 8, 22);

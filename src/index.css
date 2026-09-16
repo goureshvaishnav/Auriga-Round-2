@@ -947,6 +947,197 @@ tbody tr:hover {
   background: rgba(139, 92, 246, 0.08);
 }
 
+.import-card {
+  background: linear-gradient(135deg, var(--surface), rgba(239, 246, 255, 0.72));
+}
+
+.import-description {
+  max-width: 760px;
+  color: var(--text-soft);
+  font-size: 0.9rem;
+  margin-bottom: 18px;
+}
+
+.import-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 174px;
+  padding: 24px;
+  border: 1px dashed rgba(109, 94, 252, 0.36);
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(109, 94, 252, 0.05), rgba(56, 189, 248, 0.07));
+  color: var(--text-soft);
+  text-align: center;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.import-dropzone > svg {
+  color: var(--primary);
+}
+
+.import-dropzone strong {
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.import-dropzone span {
+  font-size: 0.8rem;
+}
+
+.import-dropzone.is-dragging {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+  transform: translateY(-1px);
+}
+
+.import-error {
+  margin-top: 12px;
+}
+
+.import-preview {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--card-border);
+}
+
+.import-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.import-preview-header h3 {
+  margin: 3px 0 0;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.import-metrics {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.import-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px;
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  background: var(--surface-strong);
+}
+
+.import-metric strong {
+  font-size: 1.3rem;
+  letter-spacing: -0.03em;
+}
+
+.import-metric span {
+  color: var(--text-soft);
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.import-metric.violet strong { color: var(--primary); }
+.import-metric.green strong { color: var(--green); }
+.import-metric.blue strong { color: var(--secondary); }
+.import-metric.amber strong { color: var(--amber); }
+.import-metric.red strong { color: var(--red); }
+
+.import-report-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.import-report-grid details {
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  background: var(--surface-soft);
+  overflow: hidden;
+}
+
+.import-report-grid summary {
+  padding: 12px 14px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.import-report-list {
+  display: grid;
+  gap: 8px;
+  padding: 0 14px 14px;
+}
+
+.import-report-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: baseline;
+  color: var(--text);
+  font-size: 0.78rem;
+}
+
+.import-report-row strong {
+  color: var(--primary-strong);
+  white-space: nowrap;
+}
+
+.import-report-row small,
+.report-muted,
+.import-assumption {
+  color: var(--text-soft);
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+.import-report-row small {
+  text-align: right;
+}
+
+.report-rejected small {
+  color: var(--red);
+}
+
+.import-assumption {
+  margin: 14px 0 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--primary-soft);
+}
+
+.import-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+:root[data-theme='dark'] .import-card {
+  background: linear-gradient(135deg, var(--surface-primary), var(--surface-secondary));
+}
+
+:root[data-theme='dark'] .import-dropzone,
+:root[data-theme='dark'] .import-metric,
+:root[data-theme='dark'] .import-report-grid details {
+  background: var(--surface-secondary);
+  border-color: var(--border);
+}
+
+:root[data-theme='dark'] .import-dropzone.is-dragging {
+  background: var(--primary-soft);
+}
+
 @media (max-width: 760px) {
   .brand-bar,
   .section-header,
@@ -973,7 +1164,9 @@ tbody tr:hover {
 
   .two-col,
   .dashboard-grid,
-  .member-form {
+  .member-form,
+  .import-metrics,
+  .import-report-grid {
     grid-template-columns: 1fr;
   }
 
@@ -992,5 +1185,15 @@ tbody tr:hover {
   .amount-box {
     width: 100%;
     text-align: left;
+  }
+
+  .import-preview-header,
+  .import-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .import-actions button {
+    width: 100%;
   }
 }

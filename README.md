@@ -10,6 +10,8 @@ The application is designed for farewell gifts, team celebrations, group purchas
 
 - Create a pool with a gift name and target amount
 - Add, remove, and update contributors
+- Import messy contribution CSV files with a reviewable cleaning report
+- Normalize names, parse Indian currency formats, reject invalid rows, and merge valid payments
 - Calculate each member's fair share automatically
 - Track target, collected, remaining, and member totals
 - View contribution balances with clear status badges
@@ -78,12 +80,23 @@ npm run preview
 2. Add everyone contributing to the pool.
 3. Enter each member's total paid amount.
 4. Review collection progress, fair share, balances, and contribution statuses.
-5. Use the settlement plan to see who should pay whom and how much.
-6. Select **Download Receipt** to save a print-friendly `GiftPool-Receipt.pdf` containing the current data.
+5. Optionally upload a CSV from **Import Contributions** and review the preview before committing cleaned records.
+6. Use the settlement plan to see who should pay whom and how much.
+7. Select **Download Receipt** to save a print-friendly `GiftPool-Receipt.pdf` containing the current data.
 
 The receipt is generated entirely in the browser. It is a clean document-style PDF rather than a screenshot of the dashboard, making it suitable for printing or sharing by email and messaging apps.
 
 The receipt is disabled until at least one member has been added. It includes the pool name, generation date and time, target, collected total, remaining amount, member count, fair share, contribution table, settlement plan, and final status.
+
+### Import cleaning rules
+
+The importer expects `Name` and `Amount` columns, but accepts common aliases such as `Member`, `Paid`, and `Contribution`. It supports values such as `1,500`, `₹1,500`, `Rs. 1500`, `INR 1500`, and `1.5k`.
+
+- Names are compared case-insensitively after trimming, collapsing spaces, and normalizing minor separators.
+- Rows with the same normalized name and amount are treated as repeated copies and de-duplicated. This is an explicit assumption shown in the import report because identical rows may otherwise be impossible to distinguish.
+- Different valid amounts for the same normalized name are treated as separate payments and merged into one member total.
+- Missing names, missing amounts, zero or negative amounts, and non-numeric amounts are rejected with their row number and reason.
+- Every accepted, de-duplicated, merged, and rejected row remains visible in the report. The cleaned result is only added after selecting **Import Cleaned Data**.
 
 ## Calculation model
 
@@ -136,6 +149,7 @@ src/
   components/
     BalanceTable.jsx         Contribution balances and statuses
     Dashboard.jsx            Summary cards, progress, and receipt action
+    ImportContributions.jsx  CSV upload, preview, and cleaning report
     MemberForm.jsx           Add-member form
     MemberList.jsx           Member payments and removal controls
     MoneyInput.jsx            Reusable INR input
@@ -143,6 +157,7 @@ src/
     SettlementList.jsx        Settlement transactions
   utils/
     calculations.js           Fair share, balances, progress, and settlement logic
+    importContributions.js    CSV cleaning, name normalization, and amount parsing
     receipt.js                Client-side PDF receipt generation
     storage.js                localStorage persistence
 vite.config.js

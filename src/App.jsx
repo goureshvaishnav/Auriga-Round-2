@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Moon, SunMedium } from 'lucide-react';
 import PoolSetup from './components/PoolSetup';
 import Dashboard from './components/Dashboard';
+import ImportContributions from './components/ImportContributions';
 import MemberForm from './components/MemberForm';
 import MemberList from './components/MemberList';
 import BalanceTable from './components/BalanceTable';
@@ -14,6 +15,7 @@ import {
   getRemaining,
 } from './utils/calculations';
 import { downloadReceipt } from './utils/receipt';
+import { normalizeName } from './utils/importContributions';
 import { clearPool, loadPool, savePool } from './utils/storage';
 
 const emptyPool = {
@@ -38,6 +40,7 @@ function App() {
     const saved = loadPool();
     return saved || emptyPool;
   });
+  const [importReport, setImportReport] = useState(null);
 
   useEffect(() => {
     savePool(pool);
@@ -92,6 +95,29 @@ function App() {
   const resetPool = () => {
     clearPool();
     setPool(emptyPool);
+    setImportReport(null);
+  };
+
+  const handleImport = (importedMembers, report) => {
+    setPool((current) => {
+      const nextMembers = current.members.map((member) => ({ ...member }));
+
+      importedMembers.forEach((importedMember) => {
+        const existingMember = nextMembers.find(
+          (member) => normalizeName(member.name) === importedMember.normalizedName,
+        );
+
+        if (existingMember) {
+          existingMember.paid = Number(existingMember.paid || 0) + importedMember.paid;
+        } else {
+          nextMembers.push(makeMember(importedMember.name));
+          nextMembers[nextMembers.length - 1].paid = importedMember.paid;
+        }
+      });
+
+      return { ...current, members: nextMembers };
+    });
+    setImportReport(report);
   };
 
   const noMembers = pool.members.length === 0;
@@ -109,6 +135,7 @@ function App() {
       totalCollected: getCollectedTotal(pool.members),
       remaining: getRemaining(pool.targetAmount, pool.members),
       targetReached,
+      importReport,
     });
   };
 
@@ -134,6 +161,8 @@ function App() {
 
       <main className="layout">
         <PoolSetup pool={pool} onPoolChange={setPool} onReset={resetPool} />
+
+        <ImportContributions onImport={handleImport} />
 
         <Dashboard
           pool={pool}
