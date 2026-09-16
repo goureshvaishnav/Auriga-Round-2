@@ -1,128 +1,173 @@
-# GiftPool — Contribution & Settlement Tracker
+# GiftPool
 
-GiftPool is a Vite + React app that helps a group calculate fair contributions, track payments, and automatically generate a settlement plan for shared expenses such as farewell gifts, team events, or group purchases.
+## Contribution & Settlement Tracker
 
-## Features
+GiftPool is a polished, client-side React application for organising shared gift contributions. Set a target, record what each person has paid, review fair-share balances, and generate a clear settlement plan without a backend or account setup.
 
-- Pool setup with gift name and target amount
-- Add, remove, and update member contributions
-- Automatic fair-share calculation
-- Dashboard summary cards for target, collected, remaining, and member count
-- Progress indicator with over-target handling
-- Balance table showing who owes, is settled, or should receive money
-- Settlement plan generation with debtor-to-creditor transfers
-- LocalStorage persistence across refreshes
-- Responsive layout for desktop and mobile screens
+The application is designed for farewell gifts, team celebrations, group purchases, and any shared contribution where the final amounts should be transparent.
 
-## Tech Stack
+## Highlights
 
-- React
-- Vite
-- JavaScript
-- CSS
-- Browser localStorage
+- Create a pool with a gift name and target amount
+- Add, remove, and update contributors
+- Calculate each member's fair share automatically
+- Track target, collected, remaining, and member totals
+- View contribution balances with clear status badges
+- Generate debtor-to-creditor settlement transactions
+- Download a professional PDF receipt containing the current pool summary, contribution table, and settlement plan
+- Persist pool data in browser localStorage
+- Persist the selected Light or Dark theme across sessions
+- Use Indian currency formatting with a permanent visual `₹` prefix for money inputs
+- Responsive layout for desktop, tablet, and mobile screens
+
+## Product experience
+
+GiftPool uses two intentionally distinct visual themes:
+
+- **Light Mode:** bright white surfaces, soft lavender and blue backgrounds, colorful gradients, and lightweight financial cards
+- **Dark Mode:** deep charcoal and navy surfaces, readable contrast, dark inputs and tables, and restrained violet-blue accents
+
+Both themes share the same data and calculations. Switching themes never changes pool values or stored data.
+
+## Technology
+
+- React 18
+- Vite 5
+- JavaScript (ES modules)
+- CSS with theme tokens and responsive media queries
+- `lucide-react` for interface icons
+- `jspdf` for client-side PDF receipt generation
+- Browser `localStorage` for persistence
+
+There is no backend, authentication layer, database, or server-side API.
 
 ## Requirements
 
-- Node.js 18+
+- Node.js 18 or newer
 - npm
 
-## Installation
+## Getting started
+
+Install dependencies:
 
 ```bash
 npm install
 ```
 
-## Run the app
+Start the development server:
 
 ```bash
 npm run dev
 ```
 
-## Production build
+Create a production build:
 
 ```bash
 npm run build
 ```
 
-## Preview production build
+Preview the production build locally:
 
 ```bash
 npm run preview
 ```
 
-## How to use
+## Using GiftPool
 
-1. Set the gift name and target amount.
-2. Add each member participating in the pool.
+1. Enter the pool or gift name and target amount.
+2. Add everyone contributing to the pool.
 3. Enter each member's total paid amount.
-4. Review the fair share, collected total, remaining amount, and balances.
-5. Use the generated settlement plan to settle with the correct debtor/creditor matches.
+4. Review collection progress, fair share, balances, and contribution statuses.
+5. Use the settlement plan to see who should pay whom and how much.
+6. Select **Download Receipt** to save a print-friendly `GiftPool-Receipt.pdf` containing the current data.
 
-## Settlement calculation explanation
+The receipt is generated entirely in the browser. It is a clean document-style PDF rather than a screenshot of the dashboard, making it suitable for printing or sharing by email and messaging apps.
 
-The app calculates each member's balance as:
+The receipt is disabled until at least one member has been added. It includes the pool name, generation date and time, target, collected total, remaining amount, member count, fair share, contribution table, settlement plan, and final status.
 
+## Calculation model
+
+For each member, GiftPool calculates:
+
+```text
+fairShare = targetAmount / memberCount
 balance = paid - fairShare
+```
 
-- Positive balance: member has paid extra and should receive money
-- Negative balance: member still owes money
-- Zero balance: member is settled
+Balance status is interpreted as follows:
 
-The settlement generator then matches debtors and creditors using the minimum of the owed and receivable amounts until every balance is resolved.
+- Positive balance: the member paid extra and should receive money
+- Negative balance: the member still owes money
+- Zero balance: the member is settled
 
-## Local storage information
+The settlement planner matches members who owe money with members who should receive money. Each transfer uses the smaller outstanding amount, continuing until all possible debtor-creditor balances are resolved.
 
-The pool is stored in browser localStorage under the key `giftPool`.
+All derived values are recalculated from the current pool state. They are not stored redundantly.
 
-The saved object includes:
+## Persistence
 
-- name
-- targetAmount
-- members
+The current pool is stored in browser localStorage under:
 
-Derived values such as fair share and balances are recalculated dynamically from the stored data instead of being saved redundantly.
+```text
+giftPool
+```
 
-## Debugging and troubleshooting
+The stored pool contains:
 
-- If the app looks blank, verify the project dependencies were installed with `npm install`.
-- If the page does not update, check the browser console for runtime errors.
-- If localStorage is not persisting, ensure the app is running in a browser context rather than a non-browser environment.
-- If the build fails, confirm you are using Node.js 18 or newer and rerun `npm install`.
+- `name`
+- `targetAmount`
+- `members`
+
+The selected theme is stored separately under:
+
+```text
+giftpool-theme
+```
+
+Use **Reset pool** in the application to clear the saved pool and return to the default state. Data is local to the browser and is not uploaded anywhere.
 
 ## Project structure
 
 ```text
 src/
-  App.jsx
-  main.jsx
-  index.css
+  App.jsx                    Application state and feature composition
+  main.jsx                   React entry point
+  index.css                 Theme system and responsive UI styles
   components/
-    BalanceTable.jsx
-    Dashboard.jsx
-    MemberForm.jsx
-    MemberList.jsx
-    PoolSetup.jsx
-    SettlementList.jsx
+    BalanceTable.jsx         Contribution balances and statuses
+    Dashboard.jsx            Summary cards, progress, and receipt action
+    MemberForm.jsx           Add-member form
+    MemberList.jsx           Member payments and removal controls
+    MoneyInput.jsx            Reusable INR input
+    PoolSetup.jsx             Pool details and target amount
+    SettlementList.jsx        Settlement transactions
   utils/
-    calculations.js
-    storage.js
+    calculations.js           Fair share, balances, progress, and settlement logic
+    receipt.js                Client-side PDF receipt generation
+    storage.js                localStorage persistence
 vite.config.js
 index.html
 package.json
 README.md
-REASONING.md
-AI_LOGS.md
 ```
 
-## Future improvements
+## Validation and troubleshooting
 
-- Add per-payment history entries instead of a single total paid amount
-- Export settlement details as PDF or CSV
-- Support multiple currencies and locale presets
-- Add editing of member names after creation
-- Add data reset confirmation modal
+Run the production build after changes:
 
----
+```bash
+npm run build
+```
 
-This project was built as a practical challenge app and keeps the logic simple, transparent, and easy to review.
+If the application does not start:
+
+- Confirm Node.js 18+ is installed.
+- Run `npm install` again.
+- Check the browser console for runtime errors.
+- Confirm localStorage is available in the browser context.
+
+If the receipt does not download, check that the browser allows downloads for the local development origin and that at least one member exists.
+
+## Design principles
+
+GiftPool keeps its business logic deliberately small and transparent. Financial values remain numeric in application state, formatting happens at the presentation boundary, and all calculations are derived from the current pool data. The UI can evolve independently without changing settlement behavior or persistence contracts.
