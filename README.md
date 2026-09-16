@@ -92,6 +92,17 @@ The receipt is disabled until at least one member has been added. It includes th
 
 The importer expects `Name` and `Amount` columns, but accepts common aliases such as `Member`, `Paid`, and `Contribution`. It supports values such as `1,500`, `₹1,500`, `Rs. 1500`, `INR 1500`, and `1.5k`.
 
+A standard import file looks like this:
+
+```csv
+Name,Amount
+Rahul Sharma,1500
+Amit,"₹1,000"
+Rohit,"2,000"
+```
+
+The **Import Preview** shows row counts and expandable details for imported, de-duplicated, merged, and rejected records. Select **Import Cleaned Data** only after reviewing the report. The cleaned totals are then added to the existing pool, and the normal dashboard, balance, settlement, and receipt views update automatically.
+
 - Names are compared case-insensitively after trimming, collapsing spaces, and normalizing minor separators.
 - Rows with the same normalized name and amount are treated as repeated copies and de-duplicated. This is an explicit assumption shown in the import report because identical rows may otherwise be impossible to distinguish.
 - Different valid amounts for the same normalized name are treated as separate payments and merged into one member total.
