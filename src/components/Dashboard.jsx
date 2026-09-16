@@ -1,7 +1,7 @@
-import { ArrowDownRight, CircleDollarSign, Target, Users } from 'lucide-react';
+import { ArrowDownRight, CircleDollarSign, Download, Target, Users } from 'lucide-react';
 import { currency, getCollectedTotal, getProgress, getRemaining } from '../utils/calculations';
 
-const Dashboard = ({ pool, members }) => {
+const Dashboard = ({ pool, members, onDownloadReceipt }) => {
   const totalCollected = getCollectedTotal(members);
   const remaining = getRemaining(pool.targetAmount, members);
   const progress = getProgress(pool.targetAmount, members);
@@ -49,6 +49,15 @@ const Dashboard = ({ pool, members }) => {
           <span>{currency(totalCollected)} collected</span>
           <span>{currency(Math.max(0, remaining))} left</span>
         </div>
+        <button
+          type="button"
+          className="secondary with-icon receipt-button"
+          onClick={onDownloadReceipt}
+          disabled={!members.length}
+        >
+          <Download size={16} />
+          Download Receipt
+        </button>
       </div>
     </section>
   );

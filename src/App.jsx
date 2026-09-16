@@ -6,7 +6,14 @@ import MemberForm from './components/MemberForm';
 import MemberList from './components/MemberList';
 import BalanceTable from './components/BalanceTable';
 import SettlementList from './components/SettlementList';
-import { buildMembersView, generateSettlementPlan, getFairShare } from './utils/calculations';
+import {
+  buildMembersView,
+  generateSettlementPlan,
+  getCollectedTotal,
+  getFairShare,
+  getRemaining,
+} from './utils/calculations';
+import { downloadReceipt } from './utils/receipt';
 import { clearPool, loadPool, savePool } from './utils/storage';
 
 const emptyPool = {
@@ -91,6 +98,20 @@ function App() {
   const hasTarget = Number(pool.targetAmount) > 0;
   const targetReached = Boolean(hasTarget && pool.members.length > 0 && pool.members.reduce((sum, member) => sum + Number(member.paid || 0), 0) >= Number(pool.targetAmount));
 
+  const handleDownloadReceipt = () => {
+    if (noMembers) return;
+
+    downloadReceipt({
+      pool,
+      memberRows,
+      settlements,
+      fairShare,
+      totalCollected: getCollectedTotal(pool.members),
+      remaining: getRemaining(pool.targetAmount, pool.members),
+      targetReached,
+    });
+  };
+
   return (
     <div className="app-shell">
       <header className="app-header">
@@ -114,7 +135,11 @@ function App() {
       <main className="layout">
         <PoolSetup pool={pool} onPoolChange={setPool} onReset={resetPool} />
 
-        <Dashboard pool={pool} members={pool.members} />
+        <Dashboard
+          pool={pool}
+          members={pool.members}
+          onDownloadReceipt={handleDownloadReceipt}
+        />
 
         <section className="card">
           <div className="section-header">

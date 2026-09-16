@@ -1,6 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
 :root {
+  --background: #f7f5ff;
+  --surface-primary: rgba(255, 255, 255, 0.86);
+  --surface-secondary: #f9fbff;
+  --text-primary: #111827;
+  --text-secondary: #536279;
+  --border: rgba(129, 140, 248, 0.18);
   --bg: #f7f5ff;
   --bg-elevated: #eef7ff;
   --surface: rgba(255, 255, 255, 0.86);
@@ -26,6 +32,12 @@
 }
 
 :root[data-theme='dark'] {
+  --background: #0b1120;
+  --surface-primary: #111827;
+  --surface-secondary: #0f172a;
+  --text-primary: #e5edf8;
+  --text-secondary: #bfcae2;
+  --border: rgba(148, 163, 184, 0.18);
   --bg: #0b1120;
   --bg-elevated: #111827;
   --surface: rgba(17, 24, 39, 0.88);
@@ -68,6 +80,7 @@ body {
     var(--bg);
   color: var(--text);
   font-family: 'Inter', 'Segoe UI', sans-serif;
+  line-height: 1.5;
 }
 
 body::before,
@@ -173,14 +186,19 @@ p {
 
 h1 {
   font-size: clamp(2.1rem, 4vw, 3.2rem);
-  letter-spacing: -0.08em;
+  letter-spacing: -0.045em;
   font-weight: 800;
 }
 
 h2 {
   font-size: 1.2rem;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.015em;
   font-weight: 700;
+}
+
+p,
+small {
+  line-height: 1.6;
 }
 
 .theme-toggle {
@@ -344,6 +362,7 @@ input:focus {
   border-radius: 12px;
   padding: 11px 16px;
   font-weight: 700;
+  letter-spacing: 0.015em;
   transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 }
 
@@ -368,6 +387,13 @@ input:focus {
 button:hover {
   transform: translateY(-1px);
   box-shadow: 0 12px 24px rgba(15, 23, 42, 0.07);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  transform: none;
+  box-shadow: none;
 }
 
 .with-icon,
@@ -509,7 +535,7 @@ button:hover {
 
 .stat-card strong {
   font-size: clamp(1.4rem, 2.5vw, 2.1rem);
-  letter-spacing: -0.06em;
+  letter-spacing: -0.035em;
   font-weight: 800;
 }
 
@@ -826,6 +852,99 @@ tbody tr:hover {
   background: linear-gradient(135deg, rgba(109, 94, 252, 0.08), rgba(56, 189, 248, 0.08));
   color: var(--primary-strong);
   font-weight: 800;
+}
+
+/* Keep the dark product surface explicit so light-mode gradients cannot leak across themes. */
+:root[data-theme='dark'] body {
+  background:
+    radial-gradient(circle at 12% 12%, rgba(139, 92, 246, 0.12), transparent 24%),
+    radial-gradient(circle at 86% 0%, rgba(37, 99, 235, 0.12), transparent 28%),
+    var(--background);
+}
+
+:root[data-theme='dark'] body::before,
+:root[data-theme='dark'] body::after {
+  opacity: 0.16;
+}
+
+:root[data-theme='dark'] .brand-bar {
+  background: linear-gradient(135deg, rgba(17, 24, 39, 0.98), rgba(30, 27, 75, 0.92));
+  border-color: var(--border);
+  box-shadow: var(--header-shadow);
+}
+
+:root[data-theme='dark'] .brand-bar::before {
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.18), rgba(96, 165, 250, 0.12));
+}
+
+:root[data-theme='dark'] .theme-toggle,
+:root[data-theme='dark'] .card,
+:root[data-theme='dark'] .stat-card,
+:root[data-theme='dark'] .member-item,
+:root[data-theme='dark'] .settlement-item {
+  background: var(--surface-primary);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+:root[data-theme='dark'] .panel-card,
+:root[data-theme='dark'] .stat-violet,
+:root[data-theme='dark'] .stat-green,
+:root[data-theme='dark'] .stat-amber,
+:root[data-theme='dark'] .stat-blue,
+:root[data-theme='dark'] .member-item,
+:root[data-theme='dark'] .settlement-item {
+  background: linear-gradient(180deg, var(--surface-primary), var(--surface-secondary));
+}
+
+:root[data-theme='dark'] input,
+:root[data-theme='dark'] .money-input-shell {
+  background: var(--surface-secondary);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+:root[data-theme='dark'] .money-input-shell input {
+  background: transparent;
+}
+
+:root[data-theme='dark'] .primary {
+  background: linear-gradient(135deg, #7c3aed, #2563eb);
+}
+
+:root[data-theme='dark'] .secondary {
+  background: rgba(139, 92, 246, 0.16);
+  border-color: rgba(167, 139, 250, 0.28);
+  color: var(--primary-strong);
+}
+
+:root[data-theme='dark'] .danger {
+  background: rgba(248, 113, 113, 0.12);
+  border-color: rgba(248, 113, 113, 0.2);
+  color: var(--red);
+}
+
+:root[data-theme='dark'] .pool-preview,
+:root[data-theme='dark'] .share-preview,
+:root[data-theme='dark'] .progress-panel,
+:root[data-theme='dark'] .amount-box {
+  background: linear-gradient(135deg, rgba(30, 27, 75, 0.9), rgba(15, 23, 42, 0.96));
+  border-color: var(--border);
+}
+
+:root[data-theme='dark'] .progress-track,
+:root[data-theme='dark'] .table-wrap,
+:root[data-theme='dark'] table {
+  background: var(--surface-secondary);
+}
+
+:root[data-theme='dark'] .stat-icon,
+:root[data-theme='dark'] .section-icon {
+  background: var(--primary-soft);
+}
+
+:root[data-theme='dark'] tbody tr:hover {
+  background: rgba(139, 92, 246, 0.08);
 }
 
 @media (max-width: 760px) {
